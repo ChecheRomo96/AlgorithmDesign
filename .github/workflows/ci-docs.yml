@@ -185,6 +185,28 @@ jobs:
         run: |
           set -euxo pipefail
 
+          # Count runtime coverage files
+          GCDA_COUNT="$(find build -name '*.gcda' | wc -l || true)"
+          echo "GCDA_COUNT=$GCDA_COUNT"
+
+          if [ "$GCDA_COUNT" -eq 0 ]; then
+            echo "No .gcda files found. Skipping lcov and creating placeholder coverage page."
+            mkdir -p site/coverage
+            printf '%s\n' \
+              '<!doctype html>' \
+              '<html>' \
+              '<head><meta charset="utf-8"><title>Coverage</title></head>' \
+              '<body>' \
+              '  <h1>Coverage Report</h1>' \
+              '  <p>No coverage data (.gcda files) was produced in this build.</p>' \
+              '  <p>Once tests and coverage flags are enabled, this page will show a detailed report.</p>' \
+              '</body>' \
+              '</html>' \
+              > site/coverage/index.html
+            exit 0
+          fi
+
+          # Real coverage path (when gcda files exist)
           lcov --directory build \
                --capture \
                --output-file coverage.info \
@@ -201,6 +223,7 @@ jobs:
 
           lcov --summary coverage.filtered.info
           genhtml coverage.filtered.info --output-directory site/coverage
+
 
       # --------------------------------------------------
       # Doxygen
