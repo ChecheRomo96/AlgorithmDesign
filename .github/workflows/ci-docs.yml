@@ -20,6 +20,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # --------------------------------------------------
+      # Checkout
+      # --------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -107,21 +110,40 @@ jobs:
           fi
 
       # --------------------------------------------------
-      # Run tests (generate gcda) + export XML
+      # Run tests via CTest (generate gcda)
       # --------------------------------------------------
-      - name: Run UnitTests (generate gcda, if available)
+      - name: Run tests with CTest (generate gcda)
         run: |
           set -euxo pipefail
           cd build
-          if [ -x "./UnitTests" ]; then
-            echo "Running UnitTests..."
-            ./UnitTests --gtest_brief=1
-            ./UnitTests --gtest_output=xml:../gtest.xml
-          else
-            echo "UnitTests executable not found; skipping gtest run."
+          ctest --output-on-failure
+
+      # --------------------------------------------------
+      # Export gtest XML from each *unitTests binary
+      # --------------------------------------------------
+      - name: Export gtest XML from unit test binaries
+        run: |
+          set -euxo pipefail
+          cd build
+
+          TEST_BINS="$(find . -maxdepth 1 -type f -perm -u+x -name '*unitTests' || true)"
+          echo "TEST_BINS=$TEST_BINS"
+
+          if [ -z "$TEST_BINS" ]; then
+            echo "No *unitTests binaries found; skipping gtest XML export."
+            exit 0
           fi
 
+          for bin in $TEST_BINS; do
+            name="$(basename "$bin")"
+            xml="../gtest_${name}.xml"
+            echo "Exporting gtest XML for $name -> $xml"
+            "./$name" --gtest_output=xml:"$xml"
+          done
 
+      # --------------------------------------------------
+      # Check gcda exists (runtime, non-fatal)
+      # --------------------------------------------------
       - name: Check gcda exists (runtime)
         run: |
           set -euxo pipefail
@@ -129,9 +151,8 @@ jobs:
           echo "GCDA_COUNT=$GCDA_COUNT"
           find build -name '*.gcda' | head -n 30 || true
           if [ "$GCDA_COUNT" -eq 0 ]; then
-            echo "WARNING: No .gcda files found. No tests executed or no coverage data yet."
+            echo "WARNING: No .gcda files found. No coverage data produced."
           fi
-
 
       # --------------------------------------------------
       # Prepare site structure
@@ -142,30 +163,82 @@ jobs:
           mkdir -p site/unit_tests site/coverage site/doxygen
 
       # --------------------------------------------------
-      # Unit test HTML report
+      # Unit test HTML report (aggregate all gtest_*.xml)
       # --------------------------------------------------
       - name: Generate unit test report
         run: |
+          set -euxo pipefail
           mkdir -p site/unit_tests
-          printf '%s\n' \
-            '<!doctype html>' \
-            '<html>' \
-            '<head><meta charset="utf-8"><title>Unit Tests</title></head>' \
-            '<body>' \
-            '  <h1>Unit Tests</h1>' \
-            '  <p>No UnitTests executable or gtest.xml found yet.</p>' \
-            '  <p>This page will update automatically once tests are available.</p>' \
-            '</body>' \
-            '</html>' \
-            > site/unit_tests/index.html
+
+          XMLS="$(ls gtest_*.xml 2>/dev/null || true)"
+          if [ -z "$XMLS" ]; then
+            echo "No gtest_*.xml found; generating placeholder Unit Tests page."
+            printf '%s\n' \
+              '<!doctype html>' \
+              '<html>' \
+              '<head><meta charset="utf-8"><title>Unit Tests</title></head>' \
+              '<body>' \
+              '  <h1>Unit Tests</h1>' \
+              '  <p>No UnitTests executables or gtest XML files were found.</p>' \
+              '  <p>This page will update automatically once tests are available.</p>' \
+              '</body>' \
+              '</html>' \
+              > site/unit_tests/index.html
+            exit 0
+          fi
+
+          python3 - << 'PY'
+            import glob
+            import xml.etree.ElementTree as ET
+            from pathlib import Path
+
+            tests = []
+
+            for path in glob.glob("gtest_*.xml"):
+                root = ET.parse(path).getroot()
+                for suite in root.findall("testsuite"):
+                    sname = suite.get("name", "")
+                    for tc in suite.findall("testcase"):
+                        tname = tc.get("name", "")
+                        full = f"{sname}.{tname}"
+                        failed = tc.find("failure") is not None
+                        tests.append((full, not failed))
+
+            total = len(tests)
+            passed = sum(1 for _, ok in tests if ok)
+            pct = (100.0 * passed / total) if total else 0.0
+
+            rows = "\n".join(
+                f"<tr><td><code>{name}</code></td><td>{'PASS' if ok else 'FAIL'}</td></tr>"
+                for name, ok in tests
+            )
+
+            html = f"""<!doctype html>
+            <html>
+            <head><meta charset="utf-8"><title>Unit Tests</title></head>
+            <body>
+            <h1>Unit Tests</h1>
+            <p><b>Result:</b> {passed}/{total} passed ({pct:.1f}%)</p>
+            <table border="1" cellpadding="6">
+                <tr><th>Test</th><th>Status</th></tr>
+                {rows}
+            </table>
+            </body>
+            </html>
+            """
+
+            Path("site/unit_tests/index.html").write_text(html, encoding="utf-8")
+            PY
 
       # --------------------------------------------------
       # Debug: show flags and coverage files (helps if it breaks)
       # --------------------------------------------------
       - name: Debug show compile flags
         run: |
-          echo "UnitTests flags.make:"
-          sed -n '1,200p' build/CMakeFiles/UnitTests.dir/flags.make || true
+          echo "LectureExample_unitTests flags.make:"
+          sed -n '1,200p' build/CMakeFiles/LectureExample_unitTests.dir/flags.make || true
+          echo "StudentExample_unitTests flags.make:"
+          sed -n '1,200p' build/CMakeFiles/StudentExample_unitTests.dir/flags.make || true
           echo "CourseLib flags.make:"
           sed -n '1,200p' build/CMakeFiles/CourseLib.dir/flags.make || true
           echo "StudentLib flags.make:"
@@ -185,7 +258,6 @@ jobs:
         run: |
           set -euxo pipefail
 
-          # Count runtime coverage files
           GCDA_COUNT="$(find build -name '*.gcda' | wc -l || true)"
           echo "GCDA_COUNT=$GCDA_COUNT"
 
@@ -206,7 +278,6 @@ jobs:
             exit 0
           fi
 
-          # Real coverage path (when gcda files exist)
           lcov --directory build \
                --capture \
                --output-file coverage.info \
@@ -224,20 +295,15 @@ jobs:
           lcov --summary coverage.filtered.info
           genhtml coverage.filtered.info --output-directory site/coverage
 
-
       # --------------------------------------------------
       # Doxygen
       # --------------------------------------------------
       - name: Generate Doxygen docs
         run: |
           set -euxo pipefail
-          
-          # Run Doxygen
           doxygen docs/Doxyfile
 
-          # Expected output directory
           OUT="docs_out/html"
-
           echo "Copying Doxygen output from: $OUT"
 
           if [ -d "$OUT" ]; then
@@ -259,9 +325,8 @@ jobs:
               > site/doxygen/index.html
           fi
 
-
       # --------------------------------------------------
-      # Landing page (no heredoc/EOF)
+      # Landing page (no heredoc/EOF issues)
       # --------------------------------------------------
       - name: Create index page
         shell: bash
