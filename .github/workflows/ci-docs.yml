@@ -195,44 +195,49 @@ jobs:
               if log_path.exists():
                   text = log_path.read_text(encoding="utf-8", errors="ignore")
                   for line in text.splitlines():
-                      # Ejemplo de línea:
-                      # " 1/2 Test #1: LectureExample_unitTests ...   Passed"
-                      m = re.search(r"Test\s+#\d+:\s+(\S+).*(Passed|Failed|Timeout|Not Run)", line)
-                      if m:
-                          name = m.group(1)
-                          status = m.group(2).lower()
-                          ok = (status == "passed")
-                          tests.append((name, ok))
+                    # Formatos típicos de CTest:
+                    # "1/2 Test: LectureExample_unitTests ............   Passed"
+                    # "1/2 Test #1: LectureExample_unitTests .........   Passed"
+                    m = re.search(
+                        r"\d+/\d+\s+Test(?:\s+#\d+)?:\s+(\S+).*(Passed|Failed|Timeout|Not Run)",
+                        line,
+                    )
+                    if m:
+                        name = m.group(1)
+                        status = m.group(2).lower()
+                        ok = (status == "passed")
+                        tests.append((name, ok))
 
-          total = len(tests)
-          passed = sum(1 for _, ok in tests if ok)
-          pct = (100.0 * passed / total) if total else 0.0
 
-          if tests:
-              rows = "\n".join(
-                  f"<tr><td><code>{name}</code></td><td>{'PASS' if ok else 'FAIL'}</td></tr>"
-                  for name, ok in tests
-              )
-          else:
-              rows = '<tr><td colspan="2"><em>No tests were discovered in this build.</em></td></tr>'
+                        total = len(tests)
+                        passed = sum(1 for _, ok in tests if ok)
+                        pct = (100.0 * passed / total) if total else 0.0
 
-          html = f'''<!doctype html>
-          <html>
-          <head><meta charset="utf-8"><title>Unit Tests</title></head>
-          <body>
-            <h1>Unit Tests</h1>
-            <p><b>Result:</b> {passed}/{total} passed ({pct:.1f}%)</p>
-            <table border="1" cellpadding="6">
-              <tr><th>Test</th><th>Status</th></tr>
-              {rows}
-            </table>
-          </body>
-          </html>
-          '''
+                        if tests:
+                            rows = "\n".join(
+                                f"<tr><td><code>{name}</code></td><td>{'PASS' if ok else 'FAIL'}</td></tr>"
+                                for name, ok in tests
+                            )
+                        else:
+                            rows = '<tr><td colspan="2"><em>No tests were discovered in this build.</em></td></tr>'
 
-          out = Path("site/unit_tests/index.html")
-          out.write_text(html, encoding="utf-8")
-          PY
+                        html = f'''<!doctype html>
+                        <html>
+                        <head><meta charset="utf-8"><title>Unit Tests</title></head>
+                        <body>
+                            <h1>Unit Tests</h1>
+                            <p><b>Result:</b> {passed}/{total} passed ({pct:.1f}%)</p>
+                            <table border="1" cellpadding="6">
+                            <tr><th>Test</th><th>Status</th></tr>
+                            {rows}
+                            </table>
+                        </body>
+                        </html>
+                        '''
+
+                        out = Path("site/unit_tests/index.html")
+                        out.write_text(html, encoding="utf-8")
+                        PY
 
 
       # --------------------------------------------------
