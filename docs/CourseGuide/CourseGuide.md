@@ -1,6 +1,9 @@
+\page CourseGuide_Page Course Guide
 
 \defgroup CourseGuide Course Guide
 
+\defgroup CourseGuide_Overview Course Guide Overview
+\ingroup CourseGuide
 # Course Guide Overview
 
 The **Course Guide** introduces the structure, workflow, and documentation model
@@ -29,3 +32,13 @@ This guide is organized into the following sections:
 
 This page is meant to be your main hub: from here you can jump into any aspect
 of the course infrastructure and workflow.
+
+\defgroup CG_01_RepositorySetup Repository Setup
+\ingroup CourseGuide
+
+\defgroup CG_02_DirectoryStructure Directory Structure
+\ingroup CourseGuide
+
+\defgroup CG_03_LocalWorkflow
+\ingroup CourseGuide
+
