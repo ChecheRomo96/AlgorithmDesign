@@ -1,8 +1,5 @@
 
 \defgroup CourseGuide Course Guide
-\ingroup CourseGuide
-
-\page CourseGuide Course Guide
 
 # Course Guide Overview
 
