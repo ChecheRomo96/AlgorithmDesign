@@ -67,10 +67,18 @@ jobs:
       # --------------------------------------------------
       # Tooling
       # --------------------------------------------------
-      - name: Install dependencies
+      - name: Install dependencies (without doxygen)
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ lcov doxygen graphviz python3
+          sudo apt-get install -y cmake g++ lcov graphviz python3
+
+      - name: Install Doxygen 1.14.0
+        run: |
+          set -euxo pipefail
+          wget -q https://www.doxygen.nl/files/doxygen-1.14.0.linux.bin.tar.gz
+          tar -xzf doxygen-1.14.0.linux.bin.tar.gz
+          sudo mv doxygen-1.14.0/bin/doxygen /usr/local/bin/doxygen
+          doxygen --version
 
       # --------------------------------------------------
       # Prepare directories (match local workflow)
