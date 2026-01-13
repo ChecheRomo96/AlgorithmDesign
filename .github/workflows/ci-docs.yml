@@ -125,7 +125,7 @@ jobs:
             --capture \
             --output-file "${TMP_DIR}/coverage.raw.info" \
             --rc derive_function_end_line=0 \
-            --ignore-errors inconsistent,unsupported,format,unused
+            --ignore-errors inconsistent,unsupported,format,unused,mismatch
 
           echo "▶ Filtering coverage..."
           lcov --quiet \
