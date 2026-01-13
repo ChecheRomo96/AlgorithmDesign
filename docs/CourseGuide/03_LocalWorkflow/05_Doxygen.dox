@@ -128,8 +128,8 @@ int Add(int a, int b);
 
 ``` cpp
 /**
- * @page MyExtraPage Example Extra Page
- * @brief Short description.
+ * \@page MyExtraPage Example Extra Page
+ * \@brief Short description.
  *
  * Additional explanation...
  */

@@ -1,10 +1,5 @@
 /*!
 \defgroup CourseGuide Course Guide
-*/
-
-/*!
-\defgroup CourseGuide_Overview Course Guide Overview
-\ingroup CourseGuide
 # Course Guide Overview
 
 The **Course Guide** introduces the structure, workflow, and documentation model
