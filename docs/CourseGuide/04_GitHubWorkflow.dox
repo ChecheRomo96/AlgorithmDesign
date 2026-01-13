@@ -1,3 +1,4 @@
+/*!
 \addtogroup CG_04_GitHubWorkflow
 
 This page explains how GitHub Actions, CI testing, and documentation publishing
@@ -207,3 +208,4 @@ GitHub Workflow integration provides:
 It is an essential part of the course template and mirrors modern software
 engineering practices.
 
+*/

@@ -1,3 +1,4 @@
+/*!
 \addtogroup CG_01_RepositorySetup
 # Repository Setup: Forking, Cloning, Actions, and Pages
 
@@ -229,4 +230,4 @@ git merge upstream/main
 git push origin main
 ```
 
----
+*/

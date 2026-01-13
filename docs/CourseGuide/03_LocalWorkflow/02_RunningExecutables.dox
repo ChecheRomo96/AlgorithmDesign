@@ -1,3 +1,4 @@
+/*!
 \defgroup CG_LocalWorkflow_02_RunningExecutables Running Executables
 \ingroup CG_03_LocalWorkflow
 # Running Executables Locally  
@@ -235,3 +236,4 @@ This way, you can rapidly iterate on your solution code in `student/`, recompile
 ---
 
 With this setup, running executables is straightforward and consistent across platforms, allowing you to focus on implementing and testing C++ logic rather than dealing with build system details.
+*/

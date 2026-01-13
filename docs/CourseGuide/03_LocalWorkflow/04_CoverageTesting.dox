@@ -1,3 +1,4 @@
+/*!
 \defgroup CG_LocalWorkflow_04_CoverageTesting Coverage Testing
 \ingroup CG_03_LocalWorkflow
 # Coverage Testing with CMake, GCOV, and LCOV
@@ -214,5 +215,4 @@ wire everything together in a unified `site/index.html`.
 With this workflow, both instructors and students can evaluate how
 thoroughly their tests exercise the code base and iteratively improve
 test suites.
-
-------------------------------------------------------------------------
+*/

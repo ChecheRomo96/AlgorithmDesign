@@ -1,3 +1,4 @@
+/*!
 \addtogroup CG_02_DirectoryStructure
 
 This page describes the structure of the repository and the purpose of
@@ -75,3 +76,4 @@ Examples and tests follow naming conventions:
 - `student/examples/*.cpp` → student example executables  
 - `course/tests/*.cc` → course test executables (automatically registered with CTest)
 - `student/tests/*.cc` → student test executables (automatically registered with CTest)
+*/

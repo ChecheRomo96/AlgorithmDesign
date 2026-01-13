@@ -1,3 +1,4 @@
+/*!
 \defgroup CG_LocalWorkflow_01_Building Building
 \ingroup CG_03_LocalWorkflow
 # Building the Project Locally
@@ -171,3 +172,4 @@ Write-Host "✔ Tests finished."
 For more details on interpreting test output or extending your own
 tests,\
 see the **Unit Testing** documentation page.
+*/
