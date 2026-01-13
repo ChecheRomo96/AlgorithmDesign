@@ -9,4 +9,3 @@ Each lesson is organized as a separate markdown file within the `course/docs/` d
 \defgroup Example_Lesson Example Lesson
 \ingroup CourseLessons
 
-

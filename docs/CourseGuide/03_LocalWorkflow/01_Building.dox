@@ -25,31 +25,30 @@ Both **instructors** and **students** use the same infrastructure:
 
 The repository is organized as follows:
 
-### **`course/`**
+### `course/`
 
 Reference code from the instructor (example implementations, tests,
-utilities).
-Students read this code but do not modify it.
+utilities). Students read this code but do not modify it.
 
-### **`student/`**
+### `student/`
 
 The code students must complete.
 All student solutions, their own tests, and their examples live here.
 
-### **`cmake/`**
+### `cmake/`
 
 Helper CMake modules.
 
-### **`docs/`**
+### `docs/`
 
 Documentation written in Doxygen format (`.dox` or `.md`).
 
-### **`scripts/`**
+### `scripts/`
 
 Automation scripts for testing, coverage, configuration, and
 documentation.
 
-### **`build/`**
+### `build/`
 
 Directory generated automatically by CMake during compilation.
 
@@ -63,14 +62,16 @@ manually.
 From the repository root:
 
 1) Create and configure the build directory
-```
+
+```sh
 cmake -S . -B build \
   -DENABLE_TESTING=ON \
   -DCMAKE_BUILD_TYPE=Debug
 ```
 
 2) Build everything (libraries and executables)
-```
+
+```sh
 cmake --build build --parallel
 ```
 
@@ -94,7 +95,7 @@ The `scripts/` folder contains helper scripts to simplify the workflow.
 
 On Linux/macOS, you can run:
 
-```
+```sh
 ./scripts/run_tests.sh
 ```
 
@@ -107,7 +108,7 @@ This script:
 
 A simplified version:
 
-```
+```sh
 #!/usr/bin/env bash
 set -e
 
@@ -131,18 +132,17 @@ echo "✔ Tests finished."
 ```
 
 The idea is to allow fast iteration without remembering every CMake
-command,\
-while still enabling you to inspect the scripts to understand what
+command, while still enabling you to inspect the scripts to understand what
 happens *under the hood*.
 
 ------------------------------------------------------------------------
 
 ## Notes for Windows Users
 
-On Windows, we recommend using **PowerShell** with `.ps1` scripts.\
+On Windows, we recommend using **PowerShell** with `.ps1` scripts.
 An equivalent to `run_tests.sh` would be:
 
-``` ps1
+```ps1
 # scripts/run_tests.ps1
 $ErrorActionPreference = "Stop"
 
@@ -170,6 +170,5 @@ Write-Host "✔ Tests finished."
 ------------------------------------------------------------------------
 
 For more details on interpreting test output or extending your own
-tests,\
-see the **Unit Testing** documentation page.
+tests, see the **Unit Testing** documentation page.
 */

@@ -1,3 +1,4 @@
+/*!
 \ingroup Example_Lesson
 \addtogroup ExampleLesson_05_ExamplesVsUnitTests
 ## 5.0 Example Targets vs. Unit Tests
@@ -39,3 +40,4 @@ StudentLib  →  CourseLib
 ```
 
 This ensures instructor evaluation is performed on student code.
+*/

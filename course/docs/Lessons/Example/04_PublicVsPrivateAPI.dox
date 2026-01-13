@@ -1,3 +1,4 @@
+/*!
 \ingroup Example_Lesson
 \addtogroup ExampleLesson_04_PrivateVsPublic
 ## 4.0 Public vs Private APIs
@@ -32,3 +33,4 @@ This file:
 - can include private helper functions/classes  
 
 This separation teaches students how real-world C++ libraries are architected.
+*/

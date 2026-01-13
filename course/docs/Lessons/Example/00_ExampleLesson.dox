@@ -1,3 +1,4 @@
+/*!
 \addtogroup Example_Lesson
 
 This lesson introduces students to the **C++ Course Template**, a professional-grade repository used throughout the course.
@@ -43,3 +44,4 @@ This environment models a real-world software engineering workflow.
 
 \defgroup ExampleLesson_10_Summary Lesson Summary
 \ingroup Example_Lesson
+*/

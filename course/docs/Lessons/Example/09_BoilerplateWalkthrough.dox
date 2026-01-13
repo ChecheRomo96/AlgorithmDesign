@@ -1,3 +1,4 @@
+/*!
 \ingroup Example_Lesson
 \addtogroup ExampleLesson_09_Boilerplate
 ## 9.0 Boilerplate Code Walkthrough
@@ -157,3 +158,4 @@ int main() {
 This is identical to how real-world library consumers depend strictly on public headers.
 
 ---
+*/

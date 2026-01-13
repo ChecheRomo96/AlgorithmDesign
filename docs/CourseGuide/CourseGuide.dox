@@ -1,5 +1,29 @@
 /*!
 \defgroup CourseGuide Course Guide
+*/
+
+/*!
+\defgroup CG_01_RepositorySetup Repository Setup
+\ingroup CourseGuide
+*/
+
+/*!
+\defgroup CG_02_DirectoryStructure Directory Structure
+\ingroup CourseGuide
+*/
+
+/*!
+\defgroup CG_03_LocalWorkflow Local Workflow
+\ingroup CourseGuide
+*/
+
+/*!
+\defgroup CG_04_GitHubWorkflow Github Workflow
+\ingroup CourseGuide
+*/
+
+/*!
+\addtogroup CourseGuide
 # Course Guide Overview
 
 The **Course Guide** introduces the structure, workflow, and documentation model
@@ -30,22 +54,3 @@ This page is meant to be your main hub: from here you can jump into any aspect
 of the course infrastructure and workflow.
 */
 
-/*!
-\defgroup CG_01_RepositorySetup Repository Setup
-\ingroup CourseGuide
-*/
-
-/*!
-\defgroup CG_02_DirectoryStructure Directory Structure
-\ingroup CourseGuide
-*/
-
-/*!
-\defgroup CG_03_LocalWorkflow Local Workflow
-\ingroup CourseGuide
-*/
-
-/*!
-\defgroup CG_04_GitHubWorkflow Github Workflow
-\ingroup CourseGuide
-*/

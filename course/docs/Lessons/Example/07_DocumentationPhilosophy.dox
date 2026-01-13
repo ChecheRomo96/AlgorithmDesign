@@ -1,3 +1,4 @@
+/*!
 \ingroup Example_Lesson
 \addtogroup ExampleLesson_07_DocsPhilosophy
 
@@ -20,3 +21,4 @@ The structure encourages students to document their code professionally.
 - conceptual explanations  
 
 This mirrors real-deployment systems (e.g., Google Style Guides + internal wikis).
+*/
