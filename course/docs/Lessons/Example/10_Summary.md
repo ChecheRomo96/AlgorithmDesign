@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_10_Summary
 ## 10.0 Summary — What Lesson 0 Teaches
 

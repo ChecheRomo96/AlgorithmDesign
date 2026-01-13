@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_01_RepositoryPurpose
 ## 1.0 Purpose of the Template
 

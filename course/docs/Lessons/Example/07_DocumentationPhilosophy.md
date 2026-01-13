@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_07_DocsPhilosophy
 
 ## 7.0 Documentation Philosophy

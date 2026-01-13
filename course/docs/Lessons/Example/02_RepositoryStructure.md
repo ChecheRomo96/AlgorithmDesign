@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_02_RepositoryStructure
 ## 2.0 Why the Repository Is Organized This Way
 

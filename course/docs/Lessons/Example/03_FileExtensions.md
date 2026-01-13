@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_03_FileExtensions
 ## 3.0 Why File Extensions Are Chosen This Way
 

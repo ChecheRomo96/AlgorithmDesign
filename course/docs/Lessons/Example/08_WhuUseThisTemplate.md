@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_08_WhyUseThisTemplate
 ## 8.0 Why We Use This Template
 

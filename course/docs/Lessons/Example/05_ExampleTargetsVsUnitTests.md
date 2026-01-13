@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_05_ExamplesVsUnitTests
 ## 5.0 Example Targets vs. Unit Tests
 

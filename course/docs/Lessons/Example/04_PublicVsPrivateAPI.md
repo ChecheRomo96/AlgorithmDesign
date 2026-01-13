@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_04_PrivateVsPublic
 ## 4.0 Public vs Private APIs
 

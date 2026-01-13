@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_09_Boilerplate
 ## 9.0 Boilerplate Code Walkthrough
 

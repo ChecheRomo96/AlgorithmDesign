@@ -1,3 +1,4 @@
+\ingroup Example_Lesson
 \addtogroup ExampleLesson_06_CMakeIntegration
 ## 6.0 How CMake Builds Everything
 
