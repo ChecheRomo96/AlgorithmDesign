@@ -73,307 +73,142 @@ jobs:
           sudo apt-get install -y cmake g++ lcov doxygen graphviz python3
 
       # --------------------------------------------------
-      # Configure / Build (clean configure, coverage enabled)
+      # Prepare directories (match local workflow)
       # --------------------------------------------------
-      - name: Clean build dir
-        run: rm -rf build
+      - name: Prepare directories
+        run: |
+          set -euxo pipefail
+          rm -rf build site tmp
+          mkdir -p tmp site/coverage site/tests
 
+      # --------------------------------------------------
+      # Configure / Build (coverage enabled)
+      # --------------------------------------------------
       - name: Configure (coverage)
         run: |
+          set -euxo pipefail
           cmake -S . -B build \
             -DENABLE_TESTING=ON \
             -DENABLE_COVERAGE=ON \
-            -DCMAKE_BUILD_TYPE=Debug
+            -DCMAKE_BUILD_TYPE=Debug \
+            --log-level=ERROR
 
       - name: Build
-        run: cmake --build build --parallel
-             
-      - name: Run CTest (to generate LastTest.log & Test.xml)
         run: |
           set -euxo pipefail
-          cd build
-          ctest --output-on-failure || true
+          cmake --build build --parallel
 
       # --------------------------------------------------
-      # HARD ASSERT: coverage instrumentation exists
+      # Run tests + generate JUnit XML (ctest.xml)
       # --------------------------------------------------
-      - name: Assert gcno exists (compile-time)
+      - name: Run unit tests (with JUnit XML)
         run: |
           set -euxo pipefail
-          GCNO_COUNT="$(find build -name '*.gcno' | wc -l)"
-          echo "GCNO_COUNT=$GCNO_COUNT"
-          find build -name '*.gcno' | head -n 30 || true
-          if [ "$GCNO_COUNT" -eq 0 ]; then
-            echo "ERROR: No .gcno files found. Coverage flags not applied at compile time."
-            exit 1
-          fi
+          ctest --test-dir build \
+                --output-junit "../tmp/ctest.xml" \
+                --output-on-failure
 
       # --------------------------------------------------
-      # Run tests (ctest) – generates gcda + CTest XML
-      # --------------------------------------------------
-      - name: Run tests (ctest)
-        run: |
-          set -euxo pipefail
-          cd build
-          ctest --output-on-failure
-
-      - name: Assert gcda exists (runtime)
-        run: |
-          set -euxo pipefail
-          GCDA_COUNT="$(find build -name '*.gcda' | wc -l)"
-          echo "GCDA_COUNT=$GCDA_COUNT"
-          find build -name '*.gcda' | head -n 30 || true
-          if [ "$GCDA_COUNT" -eq 0 ]; then
-            echo "ERROR: No .gcda files found. Tests executed but no coverage data produced."
-            exit 1
-          fi
-
-      # --------------------------------------------------
-      # Prepare site structure
-      # --------------------------------------------------
-      - name: Prepare site folders
-        run: |
-          rm -rf site
-          mkdir -p site/unit_tests site/coverage site/doxygen
-
-      # --------------------------------------------------
-      # Unit test HTML report (supports gtest.xml OR CTest XML)
-      # --------------------------------------------------
-      # --------------------------------------------------
-      # Unit test HTML report (gtest XML, CTest XML, or LastTest.log)
-      # --------------------------------------------------
-      - name: Generate unit test report
-        run: |
-          set -euxo pipefail
-          python3 - << 'PY'
-          import xml.etree.ElementTree as ET
-          from pathlib import Path
-          import re
-
-          repo_root = Path(".").resolve()
-          tests = []
-
-          # --------------------------------------------------
-          # 1) Intentar gtest.xml (si algún ejecutable lo genera)
-          # --------------------------------------------------
-          gtest_xml = None
-          for cand in [repo_root / "gtest.xml", repo_root / "build" / "gtest.xml"]:
-              if cand.exists():
-                  gtest_xml = cand
-                  break
-
-          if gtest_xml:
-              root = ET.parse(gtest_xml).getroot()
-              for suite in root.findall(".//testsuite"):
-                  sname = suite.get("name", "")
-                  for tc in suite.findall("testcase"):
-                      tname = tc.get("name", "")
-                      full = f"{sname}.{tname}" if sname else tname
-                      failed = (tc.find("failure") is not None) or (tc.find("error") is not None)
-                      tests.append((full, not failed))
-
-          # --------------------------------------------------
-          # 2) Intentar CTest Test.xml (modo dashboard)
-          # --------------------------------------------------
-          if not tests:
-              ctest_xmls = sorted(repo_root.glob("build/Testing/*/Test.xml"))
-              if ctest_xmls:
-                  xml_path = ctest_xmls[-1]  # el más reciente
-                  root = ET.parse(xml_path).getroot()
-                  for t in root.findall(".//Test"):
-                      name_el = t.find("Name")
-                      name = name_el.text if name_el is not None else "(unnamed test)"
-                      status = t.get("Status", "").lower()
-                      ok = (status == "passed")
-                      tests.append((name, ok))
-
-          # --------------------------------------------------
-          # 3) Fallback: parsear CTest LastTest.log
-          # --------------------------------------------------
-          if not tests:
-              log_path = repo_root / "build" / "Testing" / "Temporary" / "LastTest.log"
-              if log_path.exists():
-                  text = log_path.read_text(encoding="utf-8", errors="ignore")
-                  for line in text.splitlines():
-                    # Formatos típicos de CTest:
-                    # "1/2 Test: LectureExample_unitTests ............   Passed"
-                    # "1/2 Test #1: LectureExample_unitTests .........   Passed"
-                    m = re.search(
-                        r"\d+/\d+\s+Test(?:\s+#\d+)?:\s+(\S+).*(Passed|Failed|Timeout|Not Run)",
-                        line,
-                    )
-                    if m:
-                        name = m.group(1)
-                        status = m.group(2).lower()
-                        ok = (status == "passed")
-                        tests.append((name, ok))
-
-
-                        total = len(tests)
-                        passed = sum(1 for _, ok in tests if ok)
-                        pct = (100.0 * passed / total) if total else 0.0
-
-                        if tests:
-                            rows = "\n".join(
-                                f"<tr><td><code>{name}</code></td><td>{'PASS' if ok else 'FAIL'}</td></tr>"
-                                for name, ok in tests
-                            )
-                        else:
-                            rows = '<tr><td colspan="2"><em>No tests were discovered in this build.</em></td></tr>'
-
-                        html = f'''<!doctype html>
-                        <html>
-                        <head><meta charset="utf-8"><title>Unit Tests</title></head>
-                        <body>
-                            <h1>Unit Tests</h1>
-                            <p><b>Result:</b> {passed}/{total} passed ({pct:.1f}%)</p>
-                            <table border="1" cellpadding="6">
-                            <tr><th>Test</th><th>Status</th></tr>
-                            {rows}
-                            </table>
-                        </body>
-                        </html>
-                        '''
-
-                        out = Path("site/unit_tests/index.html")
-                        out.write_text(html, encoding="utf-8")
-                        PY
-
-
-      # --------------------------------------------------
-      # Debug: show flags and coverage files (helps if it breaks)
-      # --------------------------------------------------
-      - name: Debug show compile flags
-        run: |
-          echo "LectureExample_unitTests flags.make:"
-          sed -n '1,200p' build/CMakeFiles/LectureExample_unitTests.dir/flags.make || true
-          echo "StudentExample_unitTests flags.make:"
-          sed -n '1,200p' build/CMakeFiles/StudentExample_unitTests.dir/flags.make || true
-
-      - name: Debug coverage files (gcno/gcda)
-        run: |
-          echo "GCNO (sample):"
-          find build -name "*.gcno" | head -n 50 || true
-          echo "GCDA (sample):"
-          find build -name "*.gcda" | head -n 50 || true
-
-      # --------------------------------------------------
-      # Coverage report (lcov/genhtml)
+      # Coverage: capture, filter, extract, HTML (like local script)
       # --------------------------------------------------
       - name: Generate coverage report
         run: |
           set -euxo pipefail
 
-          GCDA_COUNT="$(find build -name '*.gcda' | wc -l || true)"
-          echo "GCDA_COUNT=$GCDA_COUNT"
+          BUILD_DIR="build"
+          TMP_DIR="tmp"
+          COVERAGE_SITE_DIR="site/coverage"
 
-          if [ "$GCDA_COUNT" -eq 0 ]; then
-            echo "No .gcda files found. Skipping lcov and creating placeholder coverage page."
-            mkdir -p site/coverage
-            printf '%s\n' \
-              '<!doctype html>' \
-              '<html>' \
-              '<head><meta charset="utf-8"><title>Coverage</title></head>' \
-              '<body>' \
-              '  <h1>Coverage Report</h1>' \
-              '  <p>No coverage data (.gcda files) was produced in this build.</p>' \
-              '  <p>Once tests and coverage flags are enabled, this page will show a detailed report.</p>' \
-              '</body>' \
-              '</html>' \
-              > site/coverage/index.html
-            exit 0
-          fi
+          echo "▶ Capturing coverage (lcov)..."
+          lcov --quiet \
+            --directory "${BUILD_DIR}" \
+            --capture \
+            --output-file "${TMP_DIR}/coverage.raw.info" \
+            --rc derive_function_end_line=0 \
+            --ignore-errors inconsistent,unsupported,format,unused
 
-          lcov --directory build \
-               --capture \
-               --output-file coverage.info \
-               --ignore-errors mismatch,unused \
-               --rc geninfo_unexecuted_blocks=1
+          echo "▶ Filtering coverage..."
+          lcov --quiet \
+            --remove "${TMP_DIR}/coverage.raw.info" \
+              '/usr/*' \
+              '*/_deps/*' \
+              '*/course/tests/*' \
+              '*/student/tests/*' \
+            --output-file "${TMP_DIR}/coverage.filtered.info" \
+            --ignore-errors unused
 
-          lcov --remove coverage.info \
-            '/usr/*' \
-            '*/_deps/*' \
-            '*/tests/*' \
-            --output-file coverage.filtered.info \
-            --ignore-errors mismatch,unused \
-            --rc geninfo_unexecuted_blocks=1
+          echo "▶ Extracting course-related coverage..."
+          lcov --quiet \
+            --extract "${TMP_DIR}/coverage.filtered.info" \
+              '*course/src/*' \
+              '*course/include/*' \
+              '*student/src/*' \
+              '*student/include/*' \
+            --output-file "${TMP_DIR}/coverage.final.info" \
+            --ignore-errors unused
 
-          lcov --summary coverage.filtered.info
-          genhtml coverage.filtered.info --output-directory site/coverage
+          echo "▶ Generating HTML coverage report..."
+          genhtml "${TMP_DIR}/coverage.final.info" \
+            --output-directory "${COVERAGE_SITE_DIR}" \
+            --quiet
+
+          echo "✔ Coverage generated at ${COVERAGE_SITE_DIR}/index.html"
 
       # --------------------------------------------------
-      # Doxygen
+      # HTML test report via scripts/private/render_ctest_report.py
       # --------------------------------------------------
-      - name: Generate Doxygen docs
+      - name: Generate HTML test report
         run: |
           set -euxo pipefail
+          TESTS_SITE_DIR="site/tests"
+
+          echo "▶ Generating HTML test report..."
+          python3 scripts/private/render_ctest_report.py \
+            "tmp/ctest.xml" \
+            "${TESTS_SITE_DIR}/index.html"
+          echo "✔ Test report generated at ${TESTS_SITE_DIR}/index.html"
+
+      # --------------------------------------------------
+      # Run Doxygen (assumes Doxyfile already configured)
+      # --------------------------------------------------
+      - name: Run Doxygen
+        run: |
+          set -euxo pipefail
+          echo "▶ Running Doxygen..."
           doxygen docs/Doxyfile
-
-          OUT="docs_out/html"
-          echo "Copying Doxygen output from: $OUT"
-
-          if [ -d "$OUT" ]; then
-            mkdir -p site/doxygen
-            cp -R "$OUT"/* site/doxygen/
-          else
-            echo "WARNING: Doxygen output directory not found: $OUT"
-            mkdir -p site/doxygen
-            printf '%s\n' \
-              '<!doctype html>' \
-              '<html>' \
-              '<head><meta charset="utf-8"><title>Doxygen</title></head>' \
-              '<body>' \
-              '  <h1>Doxygen Output Not Found</h1>' \
-              '  <p>The directory <code>docs_out/html/</code> does not exist.</p>' \
-              '  <p>Check your Doxyfile OUTPUT_DIRECTORY and HTML_OUTPUT settings.</p>' \
-              '</body>' \
-              '</html>' \
-              > site/doxygen/index.html
-          fi
+          echo "✔ Doxygen documentation generated"
 
       # --------------------------------------------------
-      # Landing page
+      # Landing page (match local site/index.html)
       # --------------------------------------------------
-      - name: Create index page
-        shell: bash
+      - name: Create site index
         run: |
+          set -euxo pipefail
           printf '%s\n' \
-          '<!doctype html>' \
-          '<html>' \
-          '<head><meta charset="utf-8"><title>cpp-course-template Reports</title></head>' \
-          '<body>' \
-          '  <h1>cpp-course-template – Reports</h1>' \
-          '  <ul>' \
-          '    <li><a href="unit_tests/">Unit Tests</a></li>' \
-          '    <li><a href="coverage/">Coverage</a></li>' \
-          '    <li><a href="doxygen/">Doxygen</a></li>' \
-          '  </ul>' \
-          '</body>' \
-          '</html>' \
-          > site/index.html
+            '<!DOCTYPE html>' \
+            '<html lang="es">' \
+            '<head>' \
+            '  <meta charset="utf-8" />' \
+            '  <title>Curso C++</title>' \
+            '</head>' \
+            '<body>' \
+            '  <h1>Curso C++</h1>' \
+            '  <ul>' \
+            '    <li><a href="coverage/index.html">Cobertura de código</a></li>' \
+            '    <li><a href="tests/index.html">Reporte de tests</a></li>' \
+            '    <li><a href="docs/html/index.html">Documentación Doxygen</a></li>' \
+            '  </ul>' \
+            '</body>' \
+            '</html>' \
+            > site/index.html
 
       # --------------------------------------------------
-      # Debug Pages: confirm what will be published
+      # Debug: list site tree (opcional, pero útil)
       # --------------------------------------------------
-      - name: Debug Pages context
-        run: |
-          echo "REF: $GITHUB_REF"
-          echo "EVENT: $GITHUB_EVENT_NAME"
-
-      - name: Debug Pages list site tree
+      - name: Debug site tree
         run: |
           echo "===== site/ files (maxdepth 3) ====="
           find site -maxdepth 3 -type f | sort || true
-
-      - name: Debug Pages disk usage
-        run: |
-          echo "===== site/ sizes ====="
-          du -h site || true
-
-      - name: Debug Pages preview index.html
-        run: |
-          echo "===== site/index.html ====="
-          sed -n '1,200p' site/index.html || echo "index.html missing"
 
       # --------------------------------------------------
       # Publish to GitHub Pages

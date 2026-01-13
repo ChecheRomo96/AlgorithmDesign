@@ -1,56 +1,156 @@
 \addtogroup CG_01_RepositorySetup
+# Repository Setup: Forking, Cloning, Actions, and Pages
 
 This page explains how to fork, clone, and prepare the repository for
-local development, including how to fetch updates from the instructor.
+local development, including how to activate GitHub Actions, enable GitHub
+Pages correctly for your CI configuration, and fetch updates from the instructor.
 
-### 1.0 Creating Your Fork (Required for Students)
+---
+
+# 1.0 Creating Your Fork (Required for Students)
 
 Students must **fork the instructor repository** so they can:
 
-- commit freely in their own fork
-- push their own work without affecting classmates
-- submit pull requests if required
-- receive instructor updates during the semester
+- commit freely in their own fork  
+- push their own work without affecting classmates  
+- submit pull requests if required  
+- receive instructor updates during the semester  
 
-**Step 1 — Open the instructor repository**
+## Step 1 — Open the instructor repository
 
 Visit:
 
-```
+```text
 https://github.com/<instructor>/<course_name>
 ```
 
-Click **Fork** in the top-right corner and select your GitHub account.
+Click **Fork** and select your GitHub account.
 
-**Step 2 — Clone your fork locally**
+---
+
+# 2.0 Cloning Your Fork
+
+## Step 2 — Clone your fork locally
 
 ```bash
 git clone https://github.com/<your-username>/<course_name>.git
 cd <course_name>
 ```
 
-**Step 3 — Add instructor repo as upstream**
+---
+
+# 3.0 Activating GitHub Actions (Important)
+
+GitHub Actions does **not** run until your fork receives **at least one push**.
+
+Activate CI by pushing an empty commit:
+
+```bash
+git commit --allow-empty -m "Activate GitHub Actions"
+git push -u origin main
+```
+
+After this push, the **Actions** tab will show the workflows.
+
+---
+
+# 4.0 Enabling GitHub Pages (Using `gh-pages` Branch)
+
+Your repository uses `peaceiris/actions-gh-pages` to deploy documentation.  
+This means documentation is **built into `site/` and published to the `gh-pages` branch**.
+
+Therefore, GitHub Pages must be configured to serve content from that branch.
+
+## Step 1 — Go to:
+
+**Settings → Pages**
+
+## Step 2 — Under *Build and Deployment*, set:
+
+- **Source:** Deploy from a branch  
+- **Branch:** `gh-pages`  
+- **Folder:** `/ (root)`
+
+Click **Save**.
+
+### Why this is required:
+
+Your CI contains:
+
+```yaml
+- name: Publish to GitHub Pages
+  if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  uses: peaceiris/actions-gh-pages@v4
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    publish_dir: site
+    publish_branch: gh-pages
+```
+
+This workflow:
+
+1. Builds documentation into `site/`
+2. Pushes everything inside `site/` to the `gh-pages` branch
+3. GitHub Pages serves that branch
+
+If you select “GitHub Actions” as the source, **Pages will NOT find your site**.
+
+---
+
+## 4.1 GitHub Pages URL Template
+
+Once GitHub Pages is enabled and at least one deployment has run,  
+your documentation site will be available at:
+
+```text
+https://<your-username>.github.io/<course_name>/
+```
+
+Examples:
+
+```text
+https://student123.github.io/cpp-course-template/
+https://jromodev.github.io/cpp-foundations/
+```
+
+For instructor or official course repositories:
+
+```text
+https://<instructor-username>.github.io/<course_name>/
+```
+
+You can share this URL as part of your portfolio or course deliverables.
+
+---
+
+# 5.0 Adding the Instructor Repository as Upstream
+
+## Step 3 — Add upstream remote
 
 ```bash
 git remote add upstream https://github.com/<instructor>/<course_name>.git
 ```
 
-**Step 4 — Verify remotes**
+## Step 4 — Verify remotes
 
 ```bash
 git remote -v
 ```
 
-Expected:
+Expected output:
 
-```
+```text
 origin    https://github.com/<your-username>/<course_name>.git (fetch)
 origin    https://github.com/<your-username>/<course_name>.git (push)
 upstream  https://github.com/<instructor>/<course_name>.git (fetch)
 upstream  https://github.com/<instructor>/<course_name>.git (push)
 ```
 
-**Step 5 — Keeping fork updated**
+---
+
+# 6.0 Keeping Your Fork Updated
+
+Run this regularly:
 
 ```bash
 git fetch upstream
@@ -59,25 +159,26 @@ git merge upstream/main
 git push origin main
 ```
 
+This brings in instructor updates.
+
 ---
 
-### 2.0 Required Toolchain
+# 7.0 Required Toolchain
 
 You need:
 
-- CMake 3.20+
-- C++17 compiler (GCC/Clang/MSVC)
-- Git
+- CMake 3.20+  
+- C++17 compiler (GCC, Clang, or MSVC)  
+- Git  
 
 Recommended:
 
-- gcovr (coverage)
-- lcov
-- Doxygen + Graphviz
+- gcovr or lcov  
+- Doxygen + Graphviz  
 
 ---
 
-### 3.0 Verify Installation
+# 8.0 Verify Installation
 
 ```bash
 cmake --version
@@ -87,7 +188,7 @@ git --version
 
 ---
 
-### 4.0 First Local Configuration
+# 9.0 First Local Configuration
 
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Debug
@@ -95,7 +196,7 @@ cmake -B build -DCMAKE_BUILD_TYPE=Debug
 
 ---
 
-### 5.0 First Build
+# 10.0 First Build
 
 ```bash
 cmake --build build --parallel
@@ -112,17 +213,20 @@ This compiles:
 
 ---
 
-### 6.0 Instructor Notes (Optional)
+# 11.0 Instructor Notes (Optional)
 
 Instructors may:
 
-- update `course/` with lessons
-- patch template issues
-- tag releases
+- update `course/` with new lessons  
+- patch template infrastructure  
+- tag releases  
 
 Students update via:
 
 ```bash
 git fetch upstream
 git merge upstream/main
+git push origin main
 ```
+
+---
