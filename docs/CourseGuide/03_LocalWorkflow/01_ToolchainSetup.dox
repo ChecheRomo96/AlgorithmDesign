@@ -1,0 +1,110 @@
+/*!
+\defgroup CG_LocalWorkflow_01_ToolchainSetup Toolchain Setup
+\ingroup CG_03_LocalWorkflow
+# Toolchain Setup (Windows, macOS, Linux)
+
+This page explains how to get a working C++ toolchain that can build this repository.
+
+---
+
+## What you need (minimum)
+
+- A C++ compiler
+- CMake (3.20+ is a safe baseline)
+- Git
+
+Optional but recommended:
+
+- Ninja (faster builds)
+- Python (for some helper tooling)
+- VS Code + CMake Tools extension
+
+---
+
+## Windows (recommended: WSL2)
+
+If you are on Windows, the simplest way to get a Linux-like workflow (and to run the same `.sh` scripts as CI) is **WSL2**.
+
+### 1) Enable the required Windows features
+
+Enable:
+
+- *Virtual Machine Platform*
+- *Windows Subsystem for Linux*
+
+Also ensure virtualization is enabled in BIOS/UEFI.
+
+### 2) Install a Linux distro
+
+Install Ubuntu from the Microsoft Store (or via `wsl --install`).
+
+### 3) Install build tools inside WSL
+
+Inside Ubuntu/WSL:
+
+```sh
+sudo apt update
+sudo apt install -y build-essential cmake ninja-build git lcov
+```
+
+### 4) Use VS Code with WSL
+
+- Install **VS Code** on Windows
+- Install the **Remote - WSL** extension
+- From a WSL terminal, open the repository:
+
+```sh
+code .
+```
+
+This keeps paths, build tooling, and scripts consistent.
+
+---
+
+## Linux
+
+Install typical dependencies (Debian/Ubuntu example):
+
+```sh
+sudo apt update
+sudo apt install -y build-essential cmake ninja-build git lcov
+```
+
+If you prefer Clang:
+
+```sh
+sudo apt install -y clang
+```
+
+---
+
+## macOS
+
+### 1) Install Xcode Command Line Tools
+
+```sh
+xcode-select --install
+```
+
+### 2) Install CMake (recommended: Homebrew)
+
+```sh
+brew install cmake ninja git
+```
+
+Note: coverage tooling via gcov/lcov is typically easiest on Linux/WSL.
+
+---
+
+## Quick sanity check
+
+From the repository root:
+
+```sh
+cmake -S . -B build -DENABLE_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+```
+
+If the build and tests pass, your toolchain is ready.
+*/

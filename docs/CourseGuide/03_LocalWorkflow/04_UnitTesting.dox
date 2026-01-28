@@ -1,5 +1,5 @@
 /*!
-\defgroup CG_LocalWorkflow_03_UnitTesting Unit Testing
+\defgroup CG_LocalWorkflow_04_UnitTesting Unit Testing
 \ingroup CG_03_LocalWorkflow
 # Unit Testing System with CMake + CTest + GoogleTest
 

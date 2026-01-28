@@ -1,0 +1,119 @@
+/*!
+\defgroup CG_LocalWorkflow_07_ScriptsWorkflow Scripts Workflow
+\ingroup CG_03_LocalWorkflow
+# Local Workflow with Scripts (Recommended)
+
+The `scripts/` folder provides **one-command workflows** that wrap CMake/CTest/LCOV/Doxygen.
+
+The intention is:
+
+- Students don’t have to memorize long commands
+- Instructors can standardize how builds/tests run
+- Local workflow mirrors CI as closely as possible
+
+---
+
+## How to use the scripts
+
+From the repository root:
+
+- Linux/macOS/WSL (bash):
+
+```sh
+./scripts/<script_name>.sh
+```
+
+- Windows (PowerShell):
+
+```ps1
+.\scripts\<script_name>.ps1
+```
+
+If you are on Windows and using **WSL2**, you can run the `.sh` scripts directly inside WSL.
+
+---
+
+## Typical script set
+
+Your repository may not include every script below, but this is the recommended set.
+
+| Script | Purpose | Typical output |
+|---|---|---|
+| `scripts/clean_build.*` | Deletes the `build/` directory | clean build state |
+| `scripts/configure.*` | Runs CMake configuration (`cmake -S -B ...`) | `build/` generated |
+| `scripts/build.*` | Builds all targets (`cmake --build ...`) | binaries in `build/` |
+| `scripts/run_examples.*` | (Optional) runs selected example executables | console output |
+| `scripts/run_tests.*` | Builds + runs CTest | test results |
+| `scripts/run_coverage.*` | Runs coverage collection (gcov/lcov) | HTML report |
+| `scripts/run_docs.*` | Generates Doxygen docs | HTML docs output |
+
+---
+
+## Recommended workflow (day to day)
+
+### 1) Build + run tests
+
+```sh
+./scripts/run_tests.sh
+```
+
+This should:
+
+1) Ensure `build/` exists (or recreate it)
+2) Configure with tests enabled
+3) Build
+4) Run `ctest --output-on-failure`
+
+### 2) Run an example
+
+After building, run the executable from `build/`.
+See: **Running Executables**.
+
+### 3) Coverage (when needed)
+
+```sh
+./scripts/run_coverage.sh
+```
+
+Notes:
+
+- Coverage is usually easiest on Linux/WSL.
+- Make sure you build with Debug + coverage flags (the script should handle it).
+
+### 4) Generate documentation
+
+```sh
+./scripts/run_docs.sh
+```
+
+---
+
+## Script design guidelines (for maintainers)
+
+If you are maintaining the scripts, keep them:
+
+- **Idempotent**: safe to run multiple times
+- **Readable**: students should be able to open and understand them
+- **Thin wrappers**: do not hide logic that belongs in CMake
+- **Aligned with CI**: ideally CI calls the same scripts
+
+A good bash default:
+
+```sh
+#!/usr/bin/env bash
+set -euo pipefail
+```
+
+A good PowerShell default:
+
+```ps1
+$ErrorActionPreference = "Stop"
+```
+
+---
+
+## If a script is missing
+
+If you want the workflow to be fully script-driven, add the missing script and make CI use it.
+That way students can reproduce CI failures locally with a single command.
+*/

@@ -12,33 +12,33 @@ TMP_DIR="tmp"
 COVERAGE_SITE_DIR="site/coverage"
 TESTS_SITE_DIR="site/tests"
 
-echo "▶ Preparing directories..."
+echo "- Preparing directories..."
 mkdir -p "${TMP_DIR}" "${COVERAGE_SITE_DIR}" "${TESTS_SITE_DIR}"
 
-echo "▶ Cleaning previous build..."
+echo "- Cleaning previous build..."
 rm -rf "${BUILD_DIR}"
 
-echo "▶ Configuring CMake (tests + coverage)..."
+echo "- Configuring CMake (tests + coverage)..."
 run_quiet cmake -S . -B "${BUILD_DIR}" \
   -DENABLE_TESTING=ON \
   -DENABLE_COVERAGE=ON \
   -DCMAKE_BUILD_TYPE=Debug \
   --log-level=ERROR
 
-echo "▶ Building project..."
+echo "- Building project..."
 run_quiet cmake --build "${BUILD_DIR}" --parallel
 
-echo "▶ Running unit tests..."
+echo "- Running unit tests..."
 if ! ctest --test-dir "${BUILD_DIR}" \
            --output-junit "../${TMP_DIR}/ctest.xml" \
            --output-on-failure >/dev/null 2>&1; then
   echo ""
-  echo "❌ Tests FAILED — showing full output:"
+  echo "Tests FAILED — showing full output:"
   ctest --test-dir "${BUILD_DIR}" --output-on-failure
   exit 1
 fi
 
-echo "▶ Capturing coverage (lcov)..."
+echo "- Capturing coverage (lcov)..."
 run_quiet lcov --quiet \
   --directory "${BUILD_DIR}" \
   --capture \
@@ -46,7 +46,7 @@ run_quiet lcov --quiet \
   --rc derive_function_end_line=0 \
   --ignore-errors inconsistent,unsupported,format,unused
 
-echo "▶ Filtering coverage..."
+echo "- Filtering coverage..."
 run_quiet lcov --quiet \
   --remove "${TMP_DIR}/coverage.raw.info" \
     '/usr/*' \
@@ -56,7 +56,7 @@ run_quiet lcov --quiet \
   --output-file "${TMP_DIR}/coverage.filtered.info" \
   --ignore-errors unused
 
-echo "▶ Extracting course-related coverage..."
+echo "- Extracting course-related coverage..."
 run_quiet lcov --quiet \
   --extract "${TMP_DIR}/coverage.filtered.info" \
     '*course/src/*' \
@@ -66,19 +66,19 @@ run_quiet lcov --quiet \
   --output-file "${TMP_DIR}/coverage.final.info" \
   --ignore-errors unused
 
-echo "▶ Generating HTML coverage report..."
+echo "- Generating HTML coverage report..."
 run_quiet genhtml "${TMP_DIR}/coverage.final.info" \
   --output-directory "${COVERAGE_SITE_DIR}" \
   --quiet
 echo "✔ Coverage generated at ${COVERAGE_SITE_DIR}/index.html"
 
-echo "▶ Generating HTML test report..."
+echo "- Generating HTML test report..."
 run_quiet python3 scripts/private/render_ctest_report.py \
   "${TMP_DIR}/ctest.xml" \
   "${TESTS_SITE_DIR}/index.html"
 echo "✔ Test report generated at ${TESTS_SITE_DIR}/index.html"
 
-echo "▶ Updating site index..."
+echo "- Updating site index..."
 cat << 'EOF' > site/index.html
 <!DOCTYPE html>
 <html lang="es">
@@ -97,12 +97,12 @@ cat << 'EOF' > site/index.html
 </html>
 EOF
 
-echo "▶ Running Doxygen..."
+echo "- Running Doxygen..."
 run_quiet doxygen docs/Doxyfile
 echo "✔ Doxygen documentation generated"
 
-echo "▶ Cleaning temporary files..."
+echo "- Cleaning temporary files..."
 rm -rf "${TMP_DIR}"
 
 echo ""
-echo "🚀 Full CI pipeline completed successfully."
+echo "Full CI pipeline completed successfully."

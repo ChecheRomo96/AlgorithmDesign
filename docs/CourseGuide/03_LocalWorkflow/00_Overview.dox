@@ -1,0 +1,49 @@
+/*!
+\defgroup CG_LocalWorkflow_00_Overview Overview
+\ingroup CG_03_LocalWorkflow
+# Local Workflow — Overview
+
+This section documents the **local workflow** used by both instructors and students.
+
+The goal is that you can:
+
+- Build and run code locally (fast feedback loop)
+- Run unit tests and coverage the same way as CI
+- Generate the documentation site
+
+---
+
+## The Daily Loop
+
+Most of the time, you will repeat this loop:
+
+1) Edit code (usually inside `student/`)
+2) Build + run your program (examples)
+3) Run unit tests
+4) If needed, check coverage
+
+You can do it manually with CMake commands, but the recommended approach is to use the scripts in `scripts/`.
+
+---
+
+## Where to Start
+
+Follow these pages in order:
+
+1) **Toolchain Setup** — compilers, CMake, WSL (Windows), and basic dependencies.
+2) **Build** — how to configure/build with CMake, and where outputs go.
+3) **Run Executables** — how examples and test binaries are named and executed.
+4) **Unit Testing** — GoogleTest + CTest workflow.
+5) **Coverage Testing** — gcov/lcov locally (mostly Linux/WSL).
+6) **Documentation** — generate Doxygen output.
+7) **Scripts Workflow** — the canonical “one-command” workflows.
+
+---
+
+## Recommended Mental Model
+
+- **Scripts are the source of truth.** If something works in CI, it should work locally by running the same script.
+- **CMake is the engine.** Scripts are thin wrappers that call CMake/CTest/Doxygen.
+- **Build output stays in `build/`.** You should be able to delete `build/` any time and regenerate it.
+
+*/

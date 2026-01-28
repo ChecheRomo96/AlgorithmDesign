@@ -1,5 +1,5 @@
 /*!
-\defgroup CG_LocalWorkflow_04_CoverageTesting Coverage Testing
+\defgroup CG_LocalWorkflow_05_CoverageTesting Coverage Testing
 \ingroup CG_03_LocalWorkflow
 # Coverage Testing with CMake, GCOV, and LCOV
 

@@ -46,6 +46,13 @@ print_install_hint() {
   esac
 }
 
+ensure_executable() {
+  local path="$1"
+  if [ -f "${path}" ] && [ ! -x "${path}" ]; then
+    chmod +x "${path}"
+  fi
+}
+
 echo "▶ Checking required tools..."
 echo ""
 
@@ -66,7 +73,7 @@ elif command -v clang++ >/dev/null 2>&1; then
   printf "  ✔ %-10s found at %s\n" "C++ (clang++)" "$(command -v clang++)"
 else
   echo "  ❌ C++ compiler (g++ / clang++) NOT found"
-  missing_tools+=("g++ or clang++")
+  missing_tools+=("g++")
 fi
 
 echo ""
@@ -81,19 +88,17 @@ else
   done
 fi
 
-# -------- enable scripts --------
-if [ -x "${SCRIPT_DIR}/EnableScripts.sh" ]; then
-  echo "▶ Enabling executable bits for scripts/..."
-  "${SCRIPT_DIR}/EnableScripts.sh"
-else
-  echo "ℹ EnableScripts.sh not found or not executable; skipping."
-fi
+# -------- ensure scripts are executable --------
+echo "▶ Ensuring scripts are executable..."
+ensure_executable "${SCRIPT_DIR}/setup.sh"
+ensure_executable "${SCRIPT_DIR}/unitTests.sh"
+ensure_executable "${SCRIPT_DIR}/codeCoverage.sh"
+ensure_executable "${SCRIPT_DIR}/doxygen.sh"
+ensure_executable "${SCRIPT_DIR}/fullCI.sh"
 
 echo ""
 echo "Done. You can now run:"
-echo "  ./scripts/enable_scripts.sh"
-echo "  ./scripts/disable_scripts.sh"
-echo "  ./scripts/run_tests.sh"
-echo "  ./scripts/code_coverage.sh"
-echo "  ./scripts/update_docs.sh"
-echo "  ./scripts/create_site.sh"
+echo "  ./scripts/unitTests.sh"
+echo "  ./scripts/codeCoverage.sh"
+echo "  ./scripts/doxygen.sh"
+echo "  ./scripts/fullCI.sh"
