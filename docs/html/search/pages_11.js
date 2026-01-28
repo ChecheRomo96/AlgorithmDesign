@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['gcov_20and_20lcov_0',['Coverage Testing with CMake, GCOV, and LCOV',['../group__CG__LocalWorkflow__04__CoverageTesting.html#autotoc_md113',1,'']]],
+  ['gcov_20lcov_1',['4. Generating Coverage Reports (GCOV + LCOV)',['../group__CG__LocalWorkflow__04__CoverageTesting.html#autotoc_md123',1,'']]],
+  ['generated_2',['2. Where Are the Executables Generated?',['../group__CG__LocalWorkflow__02__RunningExecutables.html#autotoc_md62',1,'']]],
+  ['generating_20a_20test_20executable_20name_3',['b) Generating a test executable name',['../group__CG__LocalWorkflow__03__UnitTesting.html#autotoc_md92',1,'']]],
+  ['generating_20coverage_20reports_20gcov_20lcov_4',['4. Generating Coverage Reports (GCOV + LCOV)',['../group__CG__LocalWorkflow__04__CoverageTesting.html#autotoc_md123',1,'']]],
+  ['generating_20documentation_20via_20scripts_5',['Generating Documentation via Scripts',['../group__CG__LocalWorkflow__05__Doxygen.html#autotoc_md132',1,'']]],
+  ['gh_20pages_20branch_6',['4.0 Enabling GitHub Pages (Using &lt;span class=&quot;tt&quot;&gt;gh-pages&lt;/span&gt; Branch)',['../group__CG__01__RepositorySetup.html#autotoc_md10',1,'']]],
+  ['github_20actions_20important_7',['3.0 Activating GitHub Actions (Important)',['../group__CG__01__RepositorySetup.html#autotoc_md8',1,'']]],
+  ['github_20pages_8',['2.4 Why Students Should Enable GitHub Pages',['../group__CG__04__GitHubWorkflow.html#autotoc_md156',1,'']]],
+  ['github_20pages_20students_20instructors_9',['2.2 Enabling GitHub Pages (Students &amp;amp; Instructors)',['../group__CG__04__GitHubWorkflow.html#autotoc_md150',1,'']]],
+  ['github_20pages_20url_20template_10',['4.1 GitHub Pages URL Template',['../group__CG__01__RepositorySetup.html#autotoc_md15',1,'']]],
+  ['github_20pages_20urls_11',['2.3 GitHub Pages URLs',['../group__CG__04__GitHubWorkflow.html#autotoc_md152',1,'']]],
+  ['github_20pages_20using_20gh_20pages_20branch_12',['4.0 Enabling GitHub Pages (Using &lt;span class=&quot;tt&quot;&gt;gh-pages&lt;/span&gt; Branch)',['../group__CG__01__RepositorySetup.html#autotoc_md10',1,'']]],
+  ['github_20workflow_13',['1.0 Purpose of the GitHub Workflow',['../group__CG__04__GitHubWorkflow.html#autotoc_md144',1,'']]],
+  ['go_20to_3a_14',['Step 1 — Go to:',['../group__CG__01__RepositorySetup.html#autotoc_md11',1,'']]],
+  ['googletest_15',['Unit Testing System with CMake + CTest + GoogleTest',['../group__CG__LocalWorkflow__03__UnitTesting.html#autotoc_md76',1,'']]],
+  ['googletest_20available_16',['5. Making GoogleTest Available',['../group__CG__LocalWorkflow__03__UnitTesting.html#autotoc_md88',1,'']]],
+  ['googletest_20download_20using_20fetchcontent_17',['3. Reproducible GoogleTest Download Using FetchContent',['../group__CG__LocalWorkflow__03__UnitTesting.html#autotoc_md83',1,'']]],
+  ['googletest_20s_20internal_20tests_18',['4. Disabling GoogleTest&apos;s Internal Tests',['../group__CG__LocalWorkflow__03__UnitTesting.html#autotoc_md86',1,'']]],
+  ['googletest_20skeleton_19',['Basic GoogleTest Skeleton',['../group__CG__LocalWorkflow__03__UnitTesting.html#autotoc_md109',1,'']]],
+  ['groups_20',['Main Page and Documentation Groups',['../group__CG__LocalWorkflow__05__Doxygen.html#autotoc_md136',1,'']]],
+  ['gtest_5fmain_21',['gtest_main',['../group__CG__LocalWorkflow__03__UnitTesting.html#autotoc_md107',1,'']]],
+  ['guide_22',['How to Use this Guide',['../group__CourseGuide.html#autotoc_md170',1,'']]],
+  ['guide_20overview_23',['Course Guide Overview',['../group__CourseGuide.html#autotoc_md169',1,'']]]
+];

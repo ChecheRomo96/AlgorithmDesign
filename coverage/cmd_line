@@ -1,0 +1,1 @@
+genhtml tmp/coverage.final.info --output-directory site/coverage --quiet

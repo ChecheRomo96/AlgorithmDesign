@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['page_20and_20documentation_20groups_0',['Main Page and Documentation Groups',['../group__CG__LocalWorkflow__05__Doxygen.html#autotoc_md136',1,'']]],
+  ['pages_1',['Pages',['../group__CG__04__GitHubWorkflow.html#autotoc_md156',1,'2.4 Why Students Should Enable GitHub Pages'],['../group__ExampleLesson__03__FileExtensions.html#autotoc_md180',1,'3.4 <span class="tt">.dox</span> (Documentation Pages)'],['../group__CG__01__RepositorySetup.html#autotoc_md0',1,'Repository Setup: Forking, Cloning, Actions, and Pages']]],
+  ['pages_20branch_2',['4.0 Enabling GitHub Pages (Using &lt;span class=&quot;tt&quot;&gt;gh-pages&lt;/span&gt; Branch)',['../group__CG__01__RepositorySetup.html#autotoc_md10',1,'']]],
+  ['pages_20students_20instructors_3',['2.2 Enabling GitHub Pages (Students &amp;amp; Instructors)',['../group__CG__04__GitHubWorkflow.html#autotoc_md150',1,'']]],
+  ['pages_20url_20template_4',['4.1 GitHub Pages URL Template',['../group__CG__01__RepositorySetup.html#autotoc_md15',1,'']]],
+  ['pages_20urls_5',['2.3 GitHub Pages URLs',['../group__CG__04__GitHubWorkflow.html#autotoc_md152',1,'']]],
+  ['pages_20using_20gh_20pages_20branch_6',['4.0 Enabling GitHub Pages (Using &lt;span class=&quot;tt&quot;&gt;gh-pages&lt;/span&gt; Branch)',['../group__CG__01__RepositorySetup.html#autotoc_md10',1,'']]],
+  ['pages_20you_20document_3a_7',['In &lt;span class=&quot;tt&quot;&gt;.dox&lt;/span&gt; pages you document:',['../group__ExampleLesson__07__DocsPhilosophy.html#autotoc_md193',1,'']]],
+  ['philosophy_8',['Philosophy',['../group__ExampleLesson__07__DocsPhilosophy.html#autotoc_md191',1,'7.0 Documentation Philosophy'],['../group__ExampleLesson__07__DocsPhilosophy.html',1,'Documentation Philosophy']]],
+  ['pipeline_9',['3.1 &lt;span class=&quot;tt&quot;&gt;ci.yml&lt;/span&gt; — Main CI Pipeline',['../group__CG__04__GitHubWorkflow.html#autotoc_md160',1,'']]],
+  ['portal_10',['C++ Course Template — Documentation Portal',['../index.html',1,'']]],
+  ['powershell_11',['Windows (PowerShell)',['../group__CG__LocalWorkflow__05__Doxygen.html#autotoc_md134',1,'']]],
+  ['powershell_20cmd_12',['4. Running Executables on Windows (PowerShell / CMD)',['../group__CG__LocalWorkflow__02__RunningExecutables.html#autotoc_md68',1,'']]],
+  ['private_20apis_13',['4.0 Public vs Private APIs',['../group__ExampleLesson__04__PrivateVsPublic.html#autotoc_md181',1,'']]],
+  ['private_20implementation_14',['Private Implementation',['../group__ExampleLesson__04__PrivateVsPublic.html#autotoc_md183',1,'']]],
+  ['private_20vs_20public_20api_15',['Private Vs Public API',['../group__ExampleLesson__04__PrivateVsPublic.html',1,'']]],
+  ['project_20locally_16',['Building the Project Locally',['../group__CG__LocalWorkflow__01__Building.html#autotoc_md41',1,'']]],
+  ['project_20structure_20overview_17',['Project Structure Overview',['../group__CG__LocalWorkflow__01__Building.html#autotoc_md43',1,'']]],
+  ['public_20api_18',['Public API',['../group__ExampleLesson__04__PrivateVsPublic.html',1,'Private Vs Public API'],['../group__ExampleLesson__04__PrivateVsPublic.html#autotoc_md182',1,'Public API']]],
+  ['public_20header_20—_20course_20include_20lectureexample_5fpublicapi_20hpp_19',['Public header — &lt;span class=&quot;tt&quot;&gt;course/include/LectureExample_publicAPI.hpp&lt;/span&gt;',['../group__ExampleLesson__09__Boilerplate.html#autotoc_md197',1,'']]],
+  ['public_20header_20—_20student_20include_20studentexample_5fpublicapi_20hpp_20',['Public header — &lt;span class=&quot;tt&quot;&gt;student/include/StudentExample_publicAPI.hpp&lt;/span&gt;',['../group__ExampleLesson__09__Boilerplate.html#autotoc_md202',1,'']]],
+  ['public_20vs_20private_20apis_21',['4.0 Public vs Private APIs',['../group__ExampleLesson__04__PrivateVsPublic.html#autotoc_md181',1,'']]],
+  ['purpose_22',['Repository Purpose',['../group__ExampleLesson__01__RepositoryPurpose.html',1,'']]],
+  ['purpose_20of_20the_20github_20workflow_23',['1.0 Purpose of the GitHub Workflow',['../group__CG__04__GitHubWorkflow.html#autotoc_md144',1,'']]],
+  ['purpose_20of_20the_20template_24',['1.0 Purpose of the Template',['../group__ExampleLesson__01__RepositoryPurpose.html#autotoc_md174',1,'']]]
+];

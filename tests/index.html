@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+  <meta charset='utf-8' />
+  <title>Reporte de tests</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+           margin: 2rem; background: #fafafa; }
+    h1 { margin-bottom: 0.2rem; }
+    p.meta { color: #666; font-size: 0.9rem; margin-top: 0; }
+
+    details.suite {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      margin-top: 1rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    details.suite > summary {
+      padding: 0.6rem 0.8rem;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      list-style: none;
+    }
+    details.suite[open] > summary {
+      border-bottom: 1px solid #eee;
+      background: #f8f8f8;
+    }
+    details.suite > summary::-webkit-details-marker { display: none; }
+
+    .suite-name { font-size: 1rem; }
+    .suite-meta { font-size: 0.8rem; color: #666; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #eee;
+      color: #555;
+    }
+    .badge-pass { background: #e6f6ea; color: #137333; }
+    .badge-fail { background: #fde7e9; color: #b3261e; }
+    .badge-skip { background: #f5f5f5; color: #666; }
+
+    details.test {
+      border-top: 1px solid #eee;
+    }
+    details.test > summary {
+      padding: 0.5rem 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      list-style: none;
+    }
+    details.test > summary::-webkit-details-marker { display: none; }
+
+    .test-name { font-weight: 500; }
+    .test-time { margin-left: auto; font-size: 0.8rem; color: #666; }
+
+    .test-body {
+      padding: 0 1rem 0.8rem 1.4rem;
+      font-size: 0.85rem;
+    }
+    .test-body p { margin: 0.25rem 0; }
+    .label { font-weight: 600; }
+
+    pre.terminal {
+      background: #111;
+      color: #eee;
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      margin-top: 0.4rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                   'Liberation Mono', 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      border: 1px solid #222;
+    }
+
+    .empty { color: #999; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>Reporte de pruebas (ctest + GoogleTest)</h1>
+  <p class='meta'>Fuente JUnit: tmp/ctest.xml</p>
+<details class='suite' open>
+  <summary>
+    <span class='suite-name'>Linux-c++</span>
+    <span class='suite-meta'>2 tests · 2 pass, 0 fail, 0 skip</span>
+    <span class='badge badge-pass'>PASS</span>
+  </summary>
+<details class='test'>
+  <summary>
+    <span class='badge badge-pass'>PASS</span>
+    <span class='test-name'>LectureExample_unitTests</span>
+    <span class='test-time'>0.00340417 s</span>
+  </summary>
+  <div class='test-body'>
+    <p><span class='label'>Mensaje:</span> <span class='empty'>(sin mensaje)</span></p>
+    <p><span class='label'>Output:</span></p>
+    <pre class='terminal'>[==========] Running 2 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 2 tests from LectureExampleTest
+[ RUN      ] LectureExampleTest.PublicAPIRuns
+[LectureExample] MyPublicAPI() called
+[LectureExample] MyPrivateAPI() internal work
+[       OK ] LectureExampleTest.PublicAPIRuns (0 ms)
+[ RUN      ] LectureExampleTest.PrivateAPIRuns
+[LectureExample] MyPrivateAPI() internal work
+[       OK ] LectureExampleTest.PrivateAPIRuns (0 ms)
+[----------] 2 tests from LectureExampleTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 2 tests.</pre>
+  </div>
+</details>
+<details class='test'>
+  <summary>
+    <span class='badge badge-pass'>PASS</span>
+    <span class='test-name'>StudentExample_unitTests</span>
+    <span class='test-time'>0.00299227 s</span>
+  </summary>
+  <div class='test-body'>
+    <p><span class='label'>Mensaje:</span> <span class='empty'>(sin mensaje)</span></p>
+    <p><span class='label'>Output:</span></p>
+    <pre class='terminal'>[==========] Running 2 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 2 tests from StudentExampleTest
+[ RUN      ] StudentExampleTest.PublicAPIRuns
+[LectureExample_StudentExample] MyPublicAPI() called
+[LectureExample_StudentExample] MyPrivateAPI() called
+[       OK ] StudentExampleTest.PublicAPIRuns (0 ms)
+[ RUN      ] StudentExampleTest.PrivateAPIRuns
+[LectureExample_StudentExample] MyPrivateAPI() called
+[       OK ] StudentExampleTest.PrivateAPIRuns (0 ms)
+[----------] 2 tests from StudentExampleTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 2 tests.</pre>
+  </div>
+</details>
+</details>
+</body>
+</html>
